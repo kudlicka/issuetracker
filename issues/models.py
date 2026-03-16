@@ -7,8 +7,20 @@ from django.contrib.auth.models import User
 class IssueType(models.Model):
     title = models.CharField(max_length=255, unique=True)
 
+    class Meta:
+        ordering = ["title"]
+
+    def __str__(self):
+        return self.title
+
 class Resolution(models.Model):
     title = models.CharField(max_length=255, unique=True)
+
+    class Meta:
+        ordering = ["title"]
+
+    def __str__(self):
+        return self.title
 
 
 class Issue(models.Model):
@@ -25,6 +37,12 @@ class Issue(models.Model):
     resolved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="+")
     duplicate_of = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
 
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"Issue: #{self.id}"
+
 class Comment(models.Model):
     issue = models.ForeignKey("Issue", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -32,3 +50,9 @@ class Comment(models.Model):
     title = models.CharField(max_length=255)
     description_md = models.TextField()
     description_html = models.TextField(editable=False)
+
+    class Meta:
+        ordering = ["-issue__created_at", "-created_at"]
+
+    def __str__(self):
+        return f"Comment: #{self.id}"
