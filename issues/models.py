@@ -12,6 +12,7 @@ class IssueType(models.Model):
     def __str__(self):
         return self.title
 
+
 class Resolution(models.Model):
     title = models.CharField(max_length=255, unique=True)
 
@@ -30,7 +31,7 @@ class Issue(models.Model):
     description_html = models.TextField(editable=False)
     issue_type = models.ForeignKey("IssueType", on_delete=models.PROTECT)
     assignee = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="+")
-    due_date = models.DateTimeField(null=True, blank=True)
+    due_date = models.DateField(null=True, blank=True)
     resolution = models.ForeignKey("Resolution", on_delete=models.PROTECT, null=True, blank=True)
     resolved_at = models.DateTimeField(null=True, blank=True)
     resolved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="+")
@@ -40,7 +41,7 @@ class Issue(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f"Issue: #{self.id}"
+        return f"{self.title} #{self.id}"
     
     def save(self, *args, **kwargs):
         self.description_html = markdown2.markdown(self.description_md)

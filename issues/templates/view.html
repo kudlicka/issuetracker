@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ issue.title }} #{{ issue.id }}
+{% endblock %}
+
+{% block main %}
+<h2>{{ issue.title }} #{{ issue.id }}</h2>
+
+<p class="issue-created-at-by">
+    Created at {{ issue.created_at }} by {{ issue.created_by }}.
+</p>
+
+<p class="issue-type">
+    Issue type: {{ issue.issue_type.title }}.
+</p>
+
+<div class="issue-description">
+    {{ issue.description_html|safe }}
+</div>
+
+<p class="issue-resolution">
+    Resolution: {{ issue.resolution.title }}
+</p>
+
+
+
+
+
+{% endblock %}

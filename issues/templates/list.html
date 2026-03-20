@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}
+Open issues
+{% endblock %}
+
+{% block main %}
+<h2>Open issues</h2>
+
+<p>
+    <a href="{% url 'add' %}">Report a new issue</a>
+</p>
+
+<table>
+<thead>
+<tr>
+    <th>Title</th>
+    <th>Created at</th>
+    <th>Created by</th>
+</tr>
+</thead>
+<tbody>
+{% for issue in issues %}
+<tr>
+    <td><a href="{% url 'view' issue_id=issue.id %}">{{ issue }}</a></td>
+    <td>{{ issue.created_at }}</td>
+    <td>{{ issue.created_by }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

@@ -1,14 +1,17 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import AddIssueForm
+from .models import Issue
 
 # Create your views here.
 
 def list(request):
-    pass
+    issues = Issue.objects.filter(resolution__isnull=True)
+    return render(request, "list.html", {"issues": issues})
 
 
 def view(request, issue_id):
-    pass
+    issue = get_object_or_404(Issue, id=issue_id)
+    return render(request, "view.html", {"issue": issue})
 
 
 def add(request):
@@ -18,7 +21,7 @@ def add(request):
             issue = form.save(commit=False)
             issue.created_by = request.user
             issue.save()
-            return redirect("/")
+            return redirect("view", issue_id=issue.id)
     else:
         form = AddIssueForm()
     return render(request, "add.html", {"form": form})
