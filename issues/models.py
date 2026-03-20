@@ -42,10 +42,21 @@ class Issue(models.Model):
 
     def __str__(self):
         return f"{self.title} #{self.id}"
-    
+
     def save(self, *args, **kwargs):
         self.description_html = markdown2.markdown(self.description_md)
         super().save(*args, **kwargs)
+
+
+class Screenshot(models.Model):
+    issue = models.ForeignKey("Issue", on_delete=models.CASCADE, related_name="screenshots")
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    screenshot = models.ImageField(upload_to="screenshots/")
+
+    def __str__(self):
+        return f"Screenshot #{self.id}"
+
 
 class Comment(models.Model):
     issue = models.ForeignKey("Issue", on_delete=models.CASCADE, related_name="comments")
@@ -59,7 +70,7 @@ class Comment(models.Model):
         ordering = ["-issue__created_at", "-created_at"]
 
     def __str__(self):
-        return f"Comment: #{self.id}"
+        return f"Comment #{self.id}"
 
     def save(self, *args, **kwargs):
         self.description_html = markdown2.markdown(self.description_md)

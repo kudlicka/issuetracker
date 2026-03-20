@@ -1,26 +1,40 @@
 {% extends "base.html" %}
 
 {% block title %}
-{{ issue.title }} #{{ issue.id }}
+{{ issue }}
 {% endblock %}
 
 {% block main %}
-<h2>{{ issue.title }} #{{ issue.id }}</h2>
+<div class="issue">
 
-<p class="issue-created-at-by">
+<h2>{{ issue }}</h2>
+
+<p class="created-at-by">
     Created at {{ issue.created_at }} by {{ issue.created_by }}.
 </p>
 
-<p class="issue-type">
+<p class="type">
     Issue type: {{ issue.issue_type.title }}.
 </p>
 
-<div class="issue-description">
+<div class="description">
     {{ issue.description_html|safe }}
 </div>
 
-<p class="issue-resolution">
+<p class="resolution">
     Resolution: {{ issue.resolution.title }}
+</p>
+
+<h2>Screenshots</h2>
+
+{% for screenshot in screenshots %}
+<div class="screenshot">
+<img src="{{ screenshot.screenshot.url }}" alt="Screenshot" width="100%">
+</div>
+{% endfor %}
+
+<p>
+    <a href="{% url 'screenshot' issue_id=issue.id %}">Add a screenshot</a>
 </p>
 
 <h2>Comments</h2>
@@ -44,5 +58,5 @@
     <div><input type="submit" value="Add comment"></div>
 </form>
 
-
+</div>
 {% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add a screenshot
+{% endblock %}
+
+{% block main %}
+<h2>Add a screenshot for <i>{{ issue }}</i></h2>
+
+<form method="post" enctype="multipart/form-data">
+{% csrf_token %}
+{{ form }}
+<div class="buttons">
+    <input type="submit" value="Add a screenshot">
+</div>
+</form>
+{% endblock %}

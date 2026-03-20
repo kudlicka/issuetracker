@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import AddIssueForm, AddCommentForm
+from .forms import AddIssueForm, AddCommentForm, AddScreenshotForm
 from .models import Issue, Comment
 
 # Create your views here.
@@ -12,6 +12,7 @@ def list(request):
 def view(request, issue_id):
     issue = get_object_or_404(Issue, id=issue_id)
     comments = issue.comments.order_by("created_at")
+    screenshots = issue.screenshots.order_by("created_at")
     add_comment_form = AddCommentForm()
     return render(
         request,
@@ -19,6 +20,7 @@ def view(request, issue_id):
             "issue": issue,
             "add_comment_form": add_comment_form,
             "comments": comments,
+            "screenshots": screenshots,
         }
     )
 
@@ -49,3 +51,25 @@ def comment(request, issue_id):
     else:
         form = AddCommentForm()
     return render(request, "comment.html", {"form": form})
+
+
+def screenshot(request, issue_id):
+    issue = get_object_or_404(Issue, id=issue_id)
+    if request.method == "POST":
+        form = AddScreenshotForm(request.POST, request.FILES)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.issue = issue
+            comment.created_by = request.user
+            comment.save()
+            return redirect("view", issue_id=issue.id)
+    else:
+        form = AddScreenshotForm()
+    return render(
+        request,
+        "screenshot.html",
+        {
+            "issue": issue,
+            "form": form,
+        }
+    )
