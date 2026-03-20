@@ -23,8 +23,26 @@
     Resolution: {{ issue.resolution.title }}
 </p>
 
+<h2>Comments</h2>
 
+{% for comment in comments %}
+<div class="comment">
+<h3>{{ comment.title }}</h3>
 
+<div class="comment-description">
+    {{ comment.description_html|safe }}
+</div>
+</div>
+
+{% endfor %}
+
+<h2>Add a comment</h2>
+
+<form action="{% url 'comment' issue_id=issue.id %}" method="post">
+    {% csrf_token %}
+    {{ add_comment_form }}
+    <div><input type="submit" value="Add comment"></div>
+</form>
 
 
 {% endblock %}

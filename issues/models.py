@@ -48,11 +48,11 @@ class Issue(models.Model):
         super().save(*args, **kwargs)
 
 class Comment(models.Model):
-    issue = models.ForeignKey("Issue", on_delete=models.CASCADE)
+    issue = models.ForeignKey("Issue", on_delete=models.CASCADE, related_name="comments")
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=255)
-    description_md = models.TextField()
+    description_md = models.TextField(verbose_name="Description (in Markdown)")
     description_html = models.TextField(editable=False)
 
     class Meta:
